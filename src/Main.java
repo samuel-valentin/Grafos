@@ -36,14 +36,17 @@ public class Main {
         int m = sc.nextInt(); // número de aristas
 
         Map<String, Nodo> nodos = new HashMap<>();
+        Nodo[] nodosEnOrden = new Nodo[n]; // arreglo para mantener el orden de los nodos
 
-        // Leer nombres de nodos
+        // Leer nombres de nodos y crear nodos
         for (int i = 0; i < n; i++) {
             String nombre = sc.next();
-            nodos.put(nombre, new Nodo(nombre));
+            Nodo nodo = new Nodo(nombre);
+            nodos.put(nombre, nodo);
+            nodosEnOrden[i] = nodo; // agregar nodo al arreglo en el orden en que se leyó
         }
 
-        // Leer aristas
+        // Leer aristas y agregar arcos
         for (int i = 0; i < m; i++) {
             String origenNombre = sc.next();
             String destinoNombre = sc.next();
@@ -55,12 +58,11 @@ public class Main {
             origen.agregarArco(destino, peso);
         }
 
-        // Leer nodo fuente
+        // Leer nodo fuente y ejecutar algoritmo de Dijkstra
         String fuenteNombre = sc.next();
         Nodo fuente = nodos.get(fuenteNombre);
         fuente.distancia = 0;
 
-        // Ejecutar algoritmo de Dijkstra
         PriorityQueue<Nodo> pq = new PriorityQueue<>(Comparator.comparingInt(nodo -> nodo.distancia));
         pq.add(fuente);
 
@@ -72,15 +74,19 @@ public class Main {
                 int nuevaDistancia = nodoActual.distancia + arco.peso;
                 if (nuevaDistancia < vecino.distancia) {
                     vecino.distancia = nuevaDistancia;
-                    pq.remove(vecino); // Eliminar y volver a agregar para actualizar la cola de prioridad
+                    pq.remove(vecino);
                     pq.add(vecino);
                 }
             }
         }
 
-        // Imprimir distancias mínimas
-        for (Nodo nodo : nodos.values()) {
+        // Imprimir distancias mínimas en el mismo orden en que se leyeron los nodos
+        /*for (Nodo nodo : nodosEnOrden) {
             System.out.println(nodo.nombre + ": " + nodo.distancia);
+        }*/
+        for (int i = 0; i < nodosEnOrden.length - 1; i++) {
+            System.out.println(nodosEnOrden[i].nombre + ": " + nodosEnOrden[i].distancia);
         }
+        System.out.print(nodosEnOrden[nodosEnOrden.length - 1].nombre + ": " + nodosEnOrden[nodosEnOrden.length - 1].distancia);
     }
 }
