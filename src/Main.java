@@ -4,25 +4,25 @@ public class Main {
 
     static class Nodo {
         String nombre;
-        List<Arco> arcos;
+        List<Arista> aristas;
         int distancia;
 
         public Nodo(String nombre) {
             this.nombre = nombre;
-            this.arcos = new ArrayList<>();
+            this.aristas = new ArrayList<>();
             this.distancia = Integer.MAX_VALUE;
         }
 
-        public void agregarArco(Nodo destino, int peso) {
-            this.arcos.add(new Arco(destino, peso));
+        public void agregarArista(Nodo destino, int peso) {
+            this.aristas.add(new Arista(destino, peso));
         }
     }
 
-    static class Arco {
+    static class Arista {
         Nodo destino;
         int peso;
 
-        public Arco(Nodo destino, int peso) {
+        public Arista(Nodo destino, int peso) {
             this.destino = destino;
             this.peso = peso;
         }
@@ -55,11 +55,12 @@ public class Main {
             Nodo origen = nodos.get(origenNombre);
             Nodo destino = nodos.get(destinoNombre);
 
-            origen.agregarArco(destino, peso);
+            origen.agregarArista(destino, peso);
         }
 
         // Leer nodo fuente y ejecutar algoritmo de Dijkstra
         String fuenteNombre = sc.next();
+        //sc.nextLine(); // consumir la línea extra
         Nodo fuente = nodos.get(fuenteNombre);
         fuente.distancia = 0;
 
@@ -69,9 +70,9 @@ public class Main {
         while (!pq.isEmpty()) {
             Nodo nodoActual = pq.poll();
 
-            for (Arco arco : nodoActual.arcos) {
-                Nodo vecino = arco.destino;
-                int nuevaDistancia = nodoActual.distancia + arco.peso;
+            for (Arista arista : nodoActual.aristas) {
+                Nodo vecino = arista.destino;
+                int nuevaDistancia = nodoActual.distancia + arista.peso;
                 if (nuevaDistancia < vecino.distancia) {
                     vecino.distancia = nuevaDistancia;
                     pq.remove(vecino);
@@ -81,9 +82,6 @@ public class Main {
         }
 
         // Imprimir distancias mínimas en el mismo orden en que se leyeron los nodos
-        /*for (Nodo nodo : nodosEnOrden) {
-            System.out.println(nodo.nombre + ": " + nodo.distancia);
-        }*/
         for (int i = 0; i < nodosEnOrden.length - 1; i++) {
             System.out.println(nodosEnOrden[i].nombre + ": " + nodosEnOrden[i].distancia);
         }
